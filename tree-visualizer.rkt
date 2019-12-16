@@ -6,6 +6,9 @@
 (define-struct de-tree (left right val))
 
 (provide visualize-binary-tree
+         visualize-tree/cons
+         visualize-tree/list
+         visualize-tree/struct
          unde-tree de-tree
          visualize-decorated-tree
          visualize-undecorated-tree)
@@ -16,14 +19,14 @@
 ;; bt->tree-layout: BinaryTree (listof Sym) -> Tree-Layout
 (define (bt->tree-layout tree order)
   (if (empty? tree)
-      (tree-layout #:pict (blank) #f #f)
+      (tree-layout #:pict (blank))
       (local
         [(define h (make-hash (map cons order (build-list 3 add1))))
          (define v (struct->vector tree))
          (define key (vector-ref v (hash-ref h 'key)))
          (define left (vector-ref v (hash-ref h 'left)))
          (define right (vector-ref v (hash-ref h 'right)))]
-        (tree-layout #:pict (text (number->string key))
+        (tree-layout #:pict (text (~v key))
                      (if (empty? left)
                          #f
                          (bt->tree-layout left order))
@@ -41,10 +44,75 @@
   (println (naive-layered (bt->tree-layout tree form))))
 
 
+;; (de-tree->tree-layout/cons tree) produces a tree-layout from tree;
+;;   this is only used as a helper of visualize-tree/cons
+;; de-tree->tree-layout/cons: (cons key (listof children)) -> Tree-Layout
+(define (de-tree->tree-layout/cons tree)
+  (cond
+    [(empty? tree)
+     (tree-layout #:pict (blank))]
+    [(not (list? tree))
+     (tree-layout #:pict (text (~v tree)))]
+    [else
+     (apply tree-layout
+            #:pict (text (~v (car tree)))
+            (map de-tree->tree-layout/cons (cdr tree)))]))
+
+
+;; (visualize-tree/cons tree) produces a visualization of tree
+;;   with nodes defined as in the form (cons key (listof children))
+;; visualize-tree/cons: (cons key (listof children)) -> Void
+(define (visualize-tree/cons tree)
+  (println (naive-layered (de-tree->tree-layout/cons tree))))
+
+
+;; (de-tree->tree-layout/list tree) produces a tree-layout from tree;
+;;   this is only used as a helper of visualize-tree/list
+;; de-tree->tree-layout/list: (list key (listof children)) -> Tree-Layout
+(define (de-tree->tree-layout/list tree)
+  (cond
+    [(empty? tree)
+     (tree-layout #:pict (blank))]
+    [(not (list? tree))
+     (tree-layout #:pict (text (~v tree)))]
+    [else
+     (apply tree-layout
+            #:pict (text (~v (first tree)))
+            (map de-tree->tree-layout/list (second tree)))]))
+
+
+;; (visualize-tree/list tree) produces a visualization of tree
+;;   with nodes defined as in the form (list key (listof children))
+;; visualize-tree/list: (list key (listof children)) -> Void
+(define (visualize-tree/list tree)
+  (println (naive-layered (de-tree->tree-layout/list tree))))
+
+
+;; (de-tree->tree-layout/struct tree) produces a tree-layout from tree;
+;;   this is only used as a helper of visualize-tree/struct
+;; de-tree->tree-layout/struct: (make-X key (listof children)) -> Tree-Layout
+(define (de-tree->tree-layout/struct tree)
+  (local
+    [(define v (struct->vector tree))
+     (define key (vector-ref v 1))
+     (define children (vector-ref v 2))]
+    (apply tree-layout
+           #:pict (text (~v key))
+           (map de-tree->tree-layout/struct children))))
+
+
+;; (visualize-tree/struct tree) produces a visualization of tree
+;;   with nodes defined as in the form (list key (listof children))
+;; visualize-tree/struct: (make-X key (listof children)) -> Void
+(define (visualize-tree/struct tree)
+  (println (naive-layered (de-tree->tree-layout/struct tree))))
+
+
 (define (visualize-undecorated-tree t)
   (if (empty? t)
       (blank)
       (naive-layered (undecorated-helper t))))
+
 
 (define (undecorated-helper t)
   (cond

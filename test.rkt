@@ -56,3 +56,40 @@
 (visualize-binary-tree n)
 (visualize-binary-tree empty)
 (visualize-binary-tree n-alt '(left right key))
+
+
+(define tree1 '(a b (c d ("E" f) g) h i (j k l m)))
+(define tree2 '(+ (* 4 2 3) (+ (* 5 1 2) 2)))
+(define tree3 (list (make-node 'test "node" 1)
+                    (make-node 'test "node" 2)
+                    (make-node 'test "node" 3)))
+
+(visualize-tree/cons tree1)
+(visualize-tree/cons empty)
+(visualize-tree/cons 'a)
+(visualize-tree/cons tree2)
+(visualize-tree/cons tree3)
+
+
+(define tree11 '(a (b (c (d ("E" (f)) g)) h i (j (k l m)))))
+(define tree12 '(+ ((* (4 2 3)) (+ ((* (5 1 2)) 2)))))
+(define tree13 (list (make-node 'test "node" 1)
+                    (list (make-node 'test "node" 2)
+                    (make-node 'test "node" 3))))
+
+(visualize-tree/list tree11)
+(visualize-tree/list tree12)
+(visualize-tree/list tree13)
+
+
+(define-struct generic-node (key children))
+(define tree24 (make-generic-node 'a
+                    (list (make-generic-node 'b
+                                             (list (make-generic-node 'c empty)
+                                                   (make-generic-node 'd empty)
+                                                   (make-generic-node "E" empty)))
+                          (make-generic-node 'f empty)
+                          (make-generic-node 'g empty)
+                          (make-generic-node 'h empty)
+                          (make-generic-node 'i empty))))
+(visualize-tree/struct tree24)
