@@ -13,7 +13,15 @@
          visualize-decorated-tree
          visualize-undecorated-tree)
 
+(define function-builder (hash 'binary-tree binary->generic
+                               'cons-tree visualize-cons-tree
+                               'list-tree visualize-list-tree
+                               'struct-tree visualize-struct-tree))
 
+
+(define (visualize tree-type tree) ((hash-ref function-builder tree-type) tree))
+
+(define visualize-undecorated-bt)
 ;; (bt->tree-layout tree order) produces a tree-layout from tree;
 ;;   this is only used as a helper of visualize-binary-tree
 ;; bt->tree-layout: BinaryTree (listof Sym) -> Tree-Layout
@@ -26,8 +34,9 @@
          (define key (vector-ref v (hash-ref h 'key)))
          (define left (vector-ref v (hash-ref h 'left)))
          (define right (vector-ref v (hash-ref h 'right)))]
+        (de-tree->tree-layout/list (list key (list left right)))
         (tree-layout #:pict (text (~v key))
-                     (if (empty? left)
+                     (if (empty? leeft)
                          #f
                          (bt->tree-layout left order))
                      (if (empty? right)
@@ -42,6 +51,8 @@
 ;; visualize-binary-tree: BinaryTree [(listof Sym)] -> Void
 (define (visualize-binary-tree tree [form '(key left right)])
   (println (naive-layered (bt->tree-layout tree form))))
+
+
 
 
 ;; (de-tree->tree-layout/cons tree) produces a tree-layout from tree;
@@ -102,7 +113,7 @@
 
 
 ;; (visualize-tree/struct tree) produces a visualization of tree
-;;   with nodes defined as in the form (list key (listof children))
+;;   with nodes defined as in the form (make-X key (listof children))
 ;; visualize-tree/struct: (make-X key (listof children)) -> Void
 (define (visualize-tree/struct tree)
   (println (naive-layered (de-tree->tree-layout/struct tree))))
