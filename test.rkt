@@ -3,9 +3,7 @@
 #reader(lib "htdp-beginner-abbr-reader.ss" "lang")((modname test) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 (require "tree-visualizer.rkt")
 
-
 (define-struct node (key left right))
-
 
 (define n (make-node 5
                      (make-node 3
@@ -24,7 +22,6 @@
                                                                             (make-node 12 empty empty)
                                                                             empty)
                                                                  (make-node 16 empty empty)))))))
-
 
 (visualize 'binary-tree n)
 (visualize 'binary-tree empty)
@@ -51,7 +48,6 @@
 (visualize 'list-tree tree11)
 (visualize 'list-tree tree12)
 (visualize 'list-tree tree13)
-
 
 (define-struct generic-node (key children))
 (define tree24 (make-generic-node 'a

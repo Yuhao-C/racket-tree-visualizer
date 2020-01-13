@@ -10,9 +10,9 @@
     [(empty? tree) empty]
     [else (begin
             (define v (struct->vector tree))
-            (define key (vector-ref v 0))
-            (define left (vector-ref v 1))
-            (define right (vector-ref v 2))
+            (define key (vector-ref v 1))
+            (define left (vector-ref v 2))
+            (define right (vector-ref v 3))
             (cons key (list (binary->generic left) (binary->generic right))))]))
 
 (define (cons->generic tree) tree)
@@ -26,11 +26,10 @@
 (define (struct->generic tree)
   (cond
     [(empty? tree) empty]
-    [(not (list? tree)) tree]
     [else (begin
             (define v (struct->vector tree))
-            (define key (vector-ref v 0))
-            (define children (vector-ref v 1))
+            (define key (vector-ref v 1))
+            (define children (vector-ref v 2))
             (cons key (map struct->generic children)))]))
 
 (define (tree->tree-layout tree)
@@ -51,7 +50,7 @@
                         'struct-tree struct->generic))
 
 (define (visualize tree-type tree)
-  (println
+  (pict->bitmap
     (naive-layered
       (tree->tree-layout
         ((hash-ref handler-hash tree-type) tree)))))
