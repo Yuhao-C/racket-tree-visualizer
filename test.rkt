@@ -1,11 +1,10 @@
 ;; The first three lines of this file were inserted by DrRacket. They record metadata
 ;; about the language level of this file in a form that our tools can easily process.
-#reader(lib "htdp-beginner-abbr-reader.ss" "lang")((modname test) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t write repeating-decimal #f #t none #f () #f)))
+#reader(lib "htdp-beginner-abbr-reader.ss" "lang")((modname test) (read-case-sensitive #t) (teachpacks ()) (htdp-settings #(#t constructor repeating-decimal #f #t none #f () #f)))
 (require "tree-visualizer.rkt")
 
 
 (define-struct node (key left right))
-(define-struct alt-node (left right key))
 
 
 (define n (make-node 5
@@ -26,37 +25,9 @@
                                                                             empty)
                                                                  (make-node 16 empty empty)))))))
 
-(define n-alt (make-alt-node
-               (make-alt-node
-                (make-alt-node empty empty 1)
-                (make-alt-node empty empty 4)
-                3)
-               (make-alt-node
-                (make-alt-node
-                 (make-alt-node empty empty 6)
-                 empty
-                 7)
-                (make-alt-node
-                 (make-alt-node empty empty 9)
-                 (make-alt-node
-                  empty
-                  (make-alt-node
-                   (make-alt-node
-                    (make-alt-node empty empty 12)
-                    empty
-                    13)
-                   (make-alt-node empty empty 16)
-                   15)
-                  11)
-                 10)
-                8)
-               5))
 
-
-(visualize-binary-tree n)
-(visualize-binary-tree empty)
-(visualize-binary-tree n-alt '(left right key))
-
+(visualize 'binary-tree n)
+(visualize 'binary-tree empty)
 
 (define tree1 '(a b (c d ("E" f) g) h i (j k l m)))
 (define tree2 '(+ (* 4 2 3) (+ (* 5 1 2) 2)))
@@ -64,11 +35,11 @@
                     (make-node 'test "node" 2)
                     (make-node 'test "node" 3)))
 
-(visualize-tree/cons tree1)
-(visualize-tree/cons empty)
-(visualize-tree/cons 'a)
-(visualize-tree/cons tree2)
-(visualize-tree/cons tree3)
+(visualize 'cons-tree tree1)
+(visualize 'cons-tree empty)
+(visualize 'cons-tree 'a)
+(visualize 'cons-tree tree2)
+(visualize 'cons-tree tree3)
 
 
 (define tree11 '(a (b (c (d ("E" (f)) g)) h i (j (k l m)))))
@@ -77,9 +48,9 @@
                     (list (make-node 'test "node" 2)
                     (make-node 'test "node" 3))))
 
-(visualize-tree/list tree11)
-(visualize-tree/list tree12)
-(visualize-tree/list tree13)
+(visualize 'list-tree tree11)
+(visualize 'list-tree tree12)
+(visualize 'list-tree tree13)
 
 
 (define-struct generic-node (key children))
@@ -92,4 +63,5 @@
                           (make-generic-node 'g empty)
                           (make-generic-node 'h empty)
                           (make-generic-node 'i empty))))
-(visualize-tree/struct tree24)
+
+(visualize 'struct-tree tree24)
